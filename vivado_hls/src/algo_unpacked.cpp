@@ -9,7 +9,6 @@
 #include <iomanip>
 #include <string>
 
-#include "cicada.h"
 #include "algo_unpacked.h"
 #include "UCTSummaryCard.hpp"
 #include "PU_LUT.h"
@@ -62,10 +61,6 @@ void algo_unpacked(ap_uint<128> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
                 tmp_link_out[idx] = 0;
         }
 
-        input_t et_calo_ad[N_INPUT_1_1];
-#pragma HLS ARRAY_RESHAPE variable=et_calo_ad complete dim=0
-        result_t cicada_out[N_LAYER_10];
-#pragma HLS ARRAY_PARTITION variable=cicada_out complete dim=0
         region_t centr_region[NR_CNTR_REG];
 #pragma HLS ARRAY_PARTITION variable=centr_region complete dim=1
 
@@ -79,16 +74,12 @@ void algo_unpacked(ap_uint<128> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
                 int bitLo = ((iRegion - link_idx * NRegionsPerLink) % NRegionsPerLink) * 16 + 8;
                 int bitHi = bitLo + 15;
                 uint16_t region_raw = link_in[link_idx].range(bitHi, bitLo);
-                et_calo_ad[iRegion] = (region_raw & 0x3FF >> 0);   // 10 bits
                 centr_region[iRegion].et = (region_raw & 0x3FF >> 0);   // 10 bits
                 centr_region[iRegion].eg_veto = (region_raw & 0x7FF) >> 10;   // 1 bit
                 centr_region[iRegion].tau_veto = (region_raw & 0xFFF) >> 11;   // 1 bit
                 centr_region[iRegion].rloc_phi = (region_raw & 0x3FFF) >> 12;   // 2 bit
                 centr_region[iRegion].rloc_eta = (region_raw & 0xFFFF) >> 14;   // 2 bit
         }
-
-        // Anomlay detection algorithm
-        cicada(et_calo_ad, cicada_out);
 
 ////////////////////////////////////////////////////////////
         // Objets from input
@@ -196,12 +187,6 @@ void algo_unpacked(ap_uint<128> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 
         // Sorting objects
         bitonicSort64(so_in_jet_boosted, so_out_jet_boosted);
-
-        // Assign the algorithm outputs
-        tmp_link_out[0].range(31, 28) = cicada_out[0].range(15, 12);
-        tmp_link_out[0].range(63, 60) = cicada_out[0].range(11, 8);
-        tmp_link_out[0].range(95, 92) = cicada_out[0].range(7, 4);
-        tmp_link_out[0].range(127, 124) = cicada_out[0].range(3, 0);
 
         int word = 32;
         for (int idx = 0; idx < 6; idx++) {
