@@ -34,8 +34,8 @@ void algo_unpacked(ap_uint<128> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
 // !!! Retain these 4 #pragma directives below in your algo_unpacked implementation !!!
 #pragma HLS ARRAY_PARTITION variable=link_in complete dim=0
 #pragma HLS ARRAY_PARTITION variable=link_out complete dim=0
-#pragma HLS PIPELINE II=4
-#pragma HLS INTERFACE ap_ctrl_hs port=return
+#pragma HLS PIPELINE II=4//#pragma HLS DATAFLOW//
+#pragma HLS INTERFACE ap_ctrl_hs port=return//#pragma HLS INTERFACE ap_ctrl_chain port=return //
    
 
     // null algo specific pragma: avoid fully combinatorial algo by specifying min latency
@@ -57,9 +57,9 @@ void algo_unpacked(ap_uint<128> link_in[N_CH_IN], ap_uint<192> link_out[N_CH_OUT
                 tmp_link_out[idx] = 0;
         }
 
-        input_t et_calo_ad[N_INPUT_1_1];
+        inputs__t et_calo_ad[N_INPUT_0_1*N_INPUT_1_1*N_INPUT_2_1];
 #pragma HLS ARRAY_RESHAPE variable=et_calo_ad complete dim=0
-        result_t cicada_out[N_LAYER_10];
+        result_t cicada_out[N_LAYER_13];
 #pragma HLS ARRAY_RESHAPE variable=cicada_out complete dim=0
 
         regionLoop: for(int iRegion = 0; iRegion < NR_CNTR_REG; iRegion++) {

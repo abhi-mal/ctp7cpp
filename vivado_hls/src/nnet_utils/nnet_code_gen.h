@@ -1,33 +1,287 @@
 #ifndef NNET_INSTR_GEN_H_
 #define NNET_INSTR_GEN_H_
 
+#include "nnet_conv1d_latency.h"
 #include "nnet_helpers.h"
-#include <iostream>
+
+#include "hls_stream.h"
+#include "nnet_common.h"
+#include "nnet_function_stubs.h"
+#include "nnet_mult.h"
 
 namespace nnet {
 
-template <class data_T, typename CONFIG_T> class FillConv1DBuffer {
+template <class data_T, class res_T, typename CONFIG_T> class PointwiseConv1D {
   public:
-    static void fill_buffer(data_T data[CONFIG_T::in_width * CONFIG_T::n_chan],
-                            data_T buffer[CONFIG_T::n_pixels][CONFIG_T::filt_width * CONFIG_T::n_chan],
-                            const unsigned partition) {
-        // To be implemented in subclasses
-    }
-};
-
-template <class data_T, typename CONFIG_T> class FillConv2DBuffer {
-  public:
-    static void
-    fill_buffer(data_T data[CONFIG_T::in_height * CONFIG_T::in_width * CONFIG_T::n_chan],
-                data_T buffer[CONFIG_T::n_pixels][CONFIG_T::filt_height * CONFIG_T::filt_width * CONFIG_T::n_chan],
-                const unsigned partition) {
+    static void pointwise_conv(data_T data[CONFIG_T::in_width * CONFIG_T::n_chan],
+                               res_T res[CONFIG_T::out_width * CONFIG_T::n_filt],
+                               typename CONFIG_T::weight_t weights[CONFIG_T::n_chan * CONFIG_T::n_filt],
+                               typename CONFIG_T::bias_t biases[CONFIG_T::n_filt]) {
         // To be implemented in subclasses
     }
 };
 
 // hls4ml insert code
+
+template<typename input_t, typename output_t>
+void conv_iq(input_t *inp, output_t *out) {
+    #pragma HLS INLINE
+
+    out[0] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[0]);
+    out[1] = ap_fixed<5,6,AP_RND,AP_SAT_SYM>(inp[1]);
+    out[2] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[2]);
+    out[3] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[3]);
+    out[4] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[4]);
+    out[5] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[5]);
+    out[6] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[6]);
+    out[7] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[7]);
+    out[8] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[8]);
+    out[9] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[9]);
+    out[10] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[10]);
+    out[11] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[11]);
+    out[12] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[12]);
+    out[13] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[13]);
+    out[14] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[14]);
+    out[15] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[15]);
+    out[16] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[16]);
+    out[17] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[17]);
+    out[18] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[18]);
+    out[19] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[19]);
+    out[20] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[20]);
+    out[21] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[21]);
+    out[22] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[22]);
+    out[23] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[23]);
+    out[24] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[24]);
+    out[25] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[25]);
+    out[26] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[26]);
+    out[27] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[27]);
+    out[28] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[28]);
+    out[29] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[29]);
+    out[30] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[30]);
+    out[31] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[31]);
+    out[32] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[32]);
+    out[33] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[33]);
+    out[34] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[34]);
+    out[35] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[35]);
+    out[36] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[36]);
+    out[37] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[37]);
+    out[38] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[38]);
+    out[39] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[39]);
+    out[40] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[40]);
+    out[41] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[41]);
+    out[42] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[42]);
+    out[43] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[43]);
+    out[44] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[44]);
+    out[45] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[45]);
+    out[46] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[46]);
+    out[47] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[47]);
+    out[48] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[48]);
+    out[49] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[49]);
+    out[50] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[50]);
+    out[51] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[51]);
+    out[52] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[52]);
+    out[53] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[53]);
+    out[54] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[54]);
+    out[55] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[55]);
+    out[56] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[56]);
+    out[57] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[57]);
+    out[58] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[58]);
+    out[59] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[59]);
+    out[60] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[60]);
+    out[61] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[61]);
+    out[62] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[62]);
+    out[63] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[63]);
+    out[64] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[64]);
+    out[65] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[65]);
+    out[66] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[66]);
+    out[67] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[67]);
+    out[68] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[68]);
+    out[69] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[69]);
+    out[70] = 0;
+    out[71] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[71]);
+    out[72] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[72]);
+    out[73] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[73]);
+    out[74] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[74]);
+    out[75] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[75]);
+    out[76] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[76]);
+    out[77] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[77]);
+    out[78] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[78]);
+    out[79] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[79]);
+    out[80] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[80]);
+    out[81] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[81]);
+    out[82] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[82]);
+    out[83] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[83]);
+    out[84] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[84]);
+    out[85] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[85]);
+    out[86] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[86]);
+    out[87] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[87]);
+    out[88] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[88]);
+    out[89] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[89]);
+    out[90] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[90]);
+    out[91] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[91]);
+    out[92] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[92]);
+    out[93] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[93]);
+    out[94] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[94]);
+    out[95] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[95]);
+    out[96] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[96]);
+    out[97] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[97]);
+    out[98] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[98]);
+    out[99] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[99]);
+    out[100] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[100]);
+    out[101] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[101]);
+    out[102] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[102]);
+    out[103] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[103]);
+    out[104] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[104]);
+    out[105] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[105]);
+    out[106] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[106]);
+    out[107] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[107]);
+    out[108] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[108]);
+    out[109] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[109]);
+    out[110] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[110]);
+    out[111] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[111]);
+    out[112] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[112]);
+    out[113] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[113]);
+    out[114] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[114]);
+    out[115] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[115]);
+    out[116] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[116]);
+    out[117] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[117]);
+    out[118] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[118]);
+    out[119] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[119]);
+    out[120] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[120]);
+    out[121] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[121]);
+    out[122] = ap_fixed<3,5,AP_RND,AP_SAT_SYM>(inp[122]);
+    out[123] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[123]);
+    out[124] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[124]);
+    out[125] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[125]);
+    out[126] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[126]);
+    out[127] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[127]);
+    out[128] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[128]);
+    out[129] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[129]);
+    out[130] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[130]);
+    out[131] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[131]);
+    out[132] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[132]);
+    out[133] = ap_fixed<5,6,AP_RND,AP_SAT_SYM>(inp[133]);
+    out[134] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[134]);
+    out[135] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[135]);
+    out[136] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[136]);
+    out[137] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[137]);
+    out[138] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[138]);
+    out[139] = ap_fixed<5,6,AP_RND,AP_SAT_SYM>(inp[139]);
+    out[140] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[140]);
+    out[141] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[141]);
+    out[142] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[142]);
+    out[143] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[143]);
+    out[144] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[144]);
+    out[145] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[145]);
+    out[146] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[146]);
+    out[147] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[147]);
+    out[148] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[148]);
+    out[149] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[149]);
+    out[150] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[150]);
+    out[151] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[151]);
+    out[152] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[152]);
+    out[153] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[153]);
+    out[154] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[154]);
+    out[155] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[155]);
+    out[156] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[156]);
+    out[157] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[157]);
+    out[158] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[158]);
+    out[159] = ap_fixed<5,6,AP_RND,AP_SAT_SYM>(inp[159]);
+    out[160] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[160]);
+    out[161] = ap_fixed<5,6,AP_RND,AP_SAT_SYM>(inp[161]);
+    out[162] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[162]);
+    out[163] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[163]);
+    out[164] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[164]);
+    out[165] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[165]);
+    out[166] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[166]);
+    out[167] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[167]);
+    out[168] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[168]);
+    out[169] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[169]);
+    out[170] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[170]);
+    out[171] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[171]);
+    out[172] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[172]);
+    out[173] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[173]);
+    out[174] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[174]);
+    out[175] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[175]);
+    out[176] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[176]);
+    out[177] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[177]);
+    out[178] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[178]);
+    out[179] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[179]);
+    out[180] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[180]);
+    out[181] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[181]);
+    out[182] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[182]);
+    out[183] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[183]);
+    out[184] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[184]);
+    out[185] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[185]);
+    out[186] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[186]);
+    out[187] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[187]);
+    out[188] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[188]);
+    out[189] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[189]);
+    out[190] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[190]);
+    out[191] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[191]);
+    out[192] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[192]);
+    out[193] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[193]);
+    out[194] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[194]);
+    out[195] = ap_fixed<6,6,AP_RND,AP_SAT_SYM>(inp[195]);
+    out[196] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[196]);
+    out[197] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[197]);
+    out[198] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[198]);
+    out[199] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[199]);
+    out[200] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[200]);
+    out[201] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[201]);
+    out[202] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[202]);
+    out[203] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[203]);
+    out[204] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[204]);
+    out[205] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[205]);
+    out[206] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[206]);
+    out[207] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[207]);
+    out[208] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[208]);
+    out[209] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[209]);
+    out[210] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[210]);
+    out[211] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[211]);
+    out[212] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[212]);
+    out[213] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[213]);
+    out[214] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[214]);
+    out[215] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[215]);
+    out[216] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[216]);
+    out[217] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[217]);
+    out[218] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[218]);
+    out[219] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[219]);
+    out[220] = ap_fixed<2,4,AP_RND,AP_SAT_SYM>(inp[220]);
+    out[221] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[221]);
+    out[222] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[222]);
+    out[223] = ap_fixed<5,6,AP_RND,AP_SAT_SYM>(inp[223]);
+    out[224] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[224]);
+    out[225] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[225]);
+    out[226] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[226]);
+    out[227] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[227]);
+    out[228] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[228]);
+    out[229] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[229]);
+    out[230] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[230]);
+    out[231] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[231]);
+    out[232] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[232]);
+    out[233] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[233]);
+    out[234] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[234]);
+    out[235] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[235]);
+    out[236] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[236]);
+    out[237] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[237]);
+    out[238] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[238]);
+    out[239] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[239]);
+    out[240] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[240]);
+    out[241] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[241]);
+    out[242] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[242]);
+    out[243] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[243]);
+    out[244] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[244]);
+    out[245] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[245]);
+    out[246] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[246]);
+    out[247] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[247]);
+    out[248] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[248]);
+    out[249] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[249]);
+    out[250] = ap_fixed<3,4,AP_RND,AP_SAT_SYM>(inp[250]);
+    out[251] = ap_fixed<4,5,AP_RND,AP_SAT_SYM>(inp[251]);
+}
 template<class data_T, typename CONFIG_T>
-class fill_buffer_3 : public FillConv2DBuffer<data_T, CONFIG_T> {
+class fill_buffer_4 : public nnet::FillConv2DBuffer<data_T, CONFIG_T> {
     public:
     static void fill_buffer(
         data_T data[CONFIG_T::in_height * CONFIG_T::in_width * CONFIG_T::n_chan],
@@ -108,6 +362,286 @@ class fill_buffer_3 : public FillConv2DBuffer<data_T, CONFIG_T> {
         }
     }
 };
+
+template<typename input_t, typename output_t>
+void dense1_iq(input_t *inp, output_t *out) {
+    #pragma HLS INLINE
+
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = ap_fixed<1,2,AP_RND,AP_SAT_SYM>(inp[2]);
+    out[3] = ap_fixed<2,3,AP_RND,AP_SAT_SYM>(inp[3]);
+    out[4] = 0;
+    out[5] = 0;
+    out[6] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[6]);
+    out[7] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[7]);
+    out[8] = 0;
+    out[9] = 0;
+    out[10] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[10]);
+    out[11] = ap_fixed<2,2,AP_RND,AP_SAT_SYM>(inp[11]);
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[14]);
+    out[15] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[15]);
+    out[16] = 0;
+    out[17] = 0;
+    out[18] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[18]);
+    out[19] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[19]);
+    out[20] = 0;
+    out[21] = 0;
+    out[22] = ap_fixed<2,2,AP_RND,AP_SAT_SYM>(inp[22]);
+    out[23] = ap_ufixed<2,3,AP_RND,AP_SAT_SYM>(inp[23]);
+    out[24] = 0;
+    out[25] = 0;
+    out[26] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[26]);
+    out[27] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[27]);
+    out[28] = 0;
+    out[29] = 0;
+    out[30] = ap_fixed<2,3,AP_RND,AP_SAT_SYM>(inp[30]);
+    out[31] = ap_fixed<2,3,AP_RND,AP_SAT_SYM>(inp[31]);
+    out[32] = 0;
+    out[33] = 0;
+    out[34] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[34]);
+    out[35] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[35]);
+    out[36] = 0;
+    out[37] = 0;
+    out[38] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[38]);
+    out[39] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[39]);
+    out[40] = 0;
+    out[41] = 0;
+    out[42] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[42]);
+    out[43] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[43]);
+    out[44] = 0;
+    out[45] = 0;
+    out[46] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[46]);
+    out[47] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[47]);
+    out[48] = 0;
+    out[49] = 0;
+    out[50] = ap_fixed<1,1,AP_RND,AP_SAT_SYM>(inp[50]);
+    out[51] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[51]);
+    out[52] = 0;
+    out[53] = 0;
+    out[54] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[54]);
+    out[55] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[55]);
+    out[56] = 0;
+    out[57] = 0;
+    out[58] = ap_fixed<1,2,AP_RND,AP_SAT_SYM>(inp[58]);
+    out[59] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[59]);
+    out[60] = 0;
+    out[61] = 0;
+    out[62] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[62]);
+    out[63] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[63]);
+    out[64] = 0;
+    out[65] = 0;
+    out[66] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[66]);
+    out[67] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[67]);
+    out[68] = 0;
+    out[69] = 0;
+    out[70] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[70]);
+    out[71] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[71]);
+    out[72] = 0;
+    out[73] = 0;
+    out[74] = ap_fixed<2,2,AP_RND,AP_SAT_SYM>(inp[74]);
+    out[75] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[75]);
+    out[76] = 0;
+    out[77] = 0;
+    out[78] = ap_fixed<1,2,AP_RND,AP_SAT_SYM>(inp[78]);
+    out[79] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[79]);
+    out[80] = 0;
+    out[81] = 0;
+    out[82] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[82]);
+    out[83] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[83]);
+    out[84] = 0;
+    out[85] = 0;
+    out[86] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[86]);
+    out[87] = ap_ufixed<2,3,AP_RND,AP_SAT_SYM>(inp[87]);
+    out[88] = 0;
+    out[89] = 0;
+    out[90] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[90]);
+    out[91] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[91]);
+    out[92] = 0;
+    out[93] = 0;
+    out[94] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[94]);
+    out[95] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[95]);
+    out[96] = 0;
+    out[97] = 0;
+    out[98] = 0;
+    out[99] = ap_fixed<2,3,AP_RND,AP_SAT_SYM>(inp[99]);
+    out[100] = 0;
+    out[101] = 0;
+    out[102] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[102]);
+    out[103] = ap_fixed<3,2,AP_RND,AP_SAT_SYM>(inp[103]);
+    out[104] = 0;
+    out[105] = 0;
+    out[106] = ap_fixed<1,1,AP_RND,AP_SAT_SYM>(inp[106]);
+    out[107] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[107]);
+    out[108] = 0;
+    out[109] = 0;
+    out[110] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[110]);
+    out[111] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[111]);
+    out[112] = 0;
+    out[113] = 0;
+    out[114] = ap_fixed<1,2,AP_RND,AP_SAT_SYM>(inp[114]);
+    out[115] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[115]);
+    out[116] = 0;
+    out[117] = 0;
+    out[118] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[118]);
+    out[119] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[119]);
+    out[120] = 0;
+    out[121] = 0;
+    out[122] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[122]);
+    out[123] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[123]);
+    out[124] = 0;
+    out[125] = 0;
+    out[126] = 0;
+    out[127] = ap_fixed<2,2,AP_RND,AP_SAT_SYM>(inp[127]);
+    out[128] = 0;
+    out[129] = 0;
+    out[130] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[130]);
+    out[131] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[131]);
+    out[132] = 0;
+    out[133] = 0;
+    out[134] = 0;
+    out[135] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[135]);
+    out[136] = 0;
+    out[137] = 0;
+    out[138] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[138]);
+    out[139] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[139]);
+    out[140] = 0;
+    out[141] = 0;
+    out[142] = ap_fixed<1,2,AP_RND,AP_SAT_SYM>(inp[142]);
+    out[143] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[143]);
+    out[144] = 0;
+    out[145] = 0;
+    out[146] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[146]);
+    out[147] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[147]);
+    out[148] = 0;
+    out[149] = 0;
+    out[150] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[150]);
+    out[151] = ap_fixed<2,2,AP_RND,AP_SAT_SYM>(inp[151]);
+    out[152] = 0;
+    out[153] = 0;
+    out[154] = ap_fixed<2,2,AP_RND,AP_SAT_SYM>(inp[154]);
+    out[155] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[155]);
+    out[156] = 0;
+    out[157] = 0;
+    out[158] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[158]);
+    out[159] = ap_fixed<3,2,AP_RND,AP_SAT_SYM>(inp[159]);
+    out[160] = 0;
+    out[161] = 0;
+    out[162] = ap_fixed<1,1,AP_RND,AP_SAT_SYM>(inp[162]);
+    out[163] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[163]);
+    out[164] = 0;
+    out[165] = 0;
+    out[166] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[166]);
+    out[167] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[167]);
+    out[168] = 0;
+    out[169] = 0;
+    out[170] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[170]);
+    out[171] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[171]);
+    out[172] = 0;
+    out[173] = 0;
+    out[174] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[174]);
+    out[175] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[175]);
+    out[176] = 0;
+    out[177] = 0;
+    out[178] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[178]);
+    out[179] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[179]);
+    out[180] = 0;
+    out[181] = 0;
+    out[182] = 0;
+    out[183] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[183]);
+    out[184] = 0;
+    out[185] = 0;
+    out[186] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[186]);
+    out[187] = ap_fixed<3,2,AP_RND,AP_SAT_SYM>(inp[187]);
+    out[188] = 0;
+    out[189] = 0;
+    out[190] = 0;
+    out[191] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[191]);
+    out[192] = 0;
+    out[193] = 0;
+    out[194] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[194]);
+    out[195] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[195]);
+    out[196] = 0;
+    out[197] = 0;
+    out[198] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[198]);
+    out[199] = ap_fixed<2,3,AP_RND,AP_SAT_SYM>(inp[199]);
+    out[200] = 0;
+    out[201] = 0;
+    out[202] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[202]);
+    out[203] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[203]);
+    out[204] = 0;
+    out[205] = 0;
+    out[206] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[206]);
+    out[207] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[207]);
+    out[208] = 0;
+    out[209] = 0;
+    out[210] = ap_fixed<5,4,AP_RND,AP_SAT_SYM>(inp[210]);
+    out[211] = ap_fixed<2,3,AP_RND,AP_SAT_SYM>(inp[211]);
+    out[212] = 0;
+    out[213] = 0;
+    out[214] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[214]);
+    out[215] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[215]);
+    out[216] = 0;
+    out[217] = 0;
+    out[218] = ap_fixed<1,1,AP_RND,AP_SAT_SYM>(inp[218]);
+    out[219] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[219]);
+    out[220] = 0;
+    out[221] = 0;
+    out[222] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[222]);
+    out[223] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[223]);
+    out[224] = 0;
+    out[225] = 0;
+    out[226] = ap_fixed<5,4,AP_RND,AP_SAT_SYM>(inp[226]);
+    out[227] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[227]);
+    out[228] = 0;
+    out[229] = 0;
+    out[230] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[230]);
+    out[231] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[231]);
+    out[232] = 0;
+    out[233] = 0;
+    out[234] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[234]);
+    out[235] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[235]);
+    out[236] = 0;
+    out[237] = 0;
+    out[238] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[238]);
+    out[239] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[239]);
+    out[240] = 0;
+    out[241] = 0;
+    out[242] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[242]);
+    out[243] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[243]);
+    out[244] = 0;
+    out[245] = 0;
+    out[246] = 0;
+    out[247] = ap_ufixed<2,2,AP_RND,AP_SAT_SYM>(inp[247]);
+    out[248] = 0;
+    out[249] = 0;
+    out[250] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[250]);
+    out[251] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[251]);
+}
+
+template<typename input_t, typename output_t>
+void dense2_iq(input_t *inp, output_t *out) {
+    #pragma HLS INLINE
+
+    out[0] = ap_fixed<5,4,AP_RND,AP_SAT_SYM>(inp[0]);
+    out[1] = ap_fixed<5,5,AP_RND,AP_SAT_SYM>(inp[1]);
+    out[2] = ap_fixed<8,6,AP_RND,AP_SAT_SYM>(inp[2]);
+    out[3] = 0;
+    out[4] = ap_fixed<3,3,AP_RND,AP_SAT_SYM>(inp[4]);
+    out[5] = ap_fixed<8,6,AP_RND,AP_SAT_SYM>(inp[5]);
+    out[6] = ap_fixed<7,6,AP_RND,AP_SAT_SYM>(inp[6]);
+    out[7] = ap_fixed<1,3,AP_RND,AP_SAT_SYM>(inp[7]);
+    out[8] = ap_fixed<7,6,AP_RND,AP_SAT_SYM>(inp[8]);
+    out[9] = ap_fixed<4,3,AP_RND,AP_SAT_SYM>(inp[9]);
+    out[10] = ap_fixed<7,5,AP_RND,AP_SAT_SYM>(inp[10]);
+    out[11] = ap_fixed<4,4,AP_RND,AP_SAT_SYM>(inp[11]);
+    out[12] = ap_fixed<11,7,AP_RND,AP_SAT_SYM>(inp[12]);
+    out[13] = ap_fixed<8,6,AP_RND,AP_SAT_SYM>(inp[13]);
+    out[14] = ap_fixed<12,8,AP_RND,AP_SAT_SYM>(inp[14]);
+    out[15] = ap_fixed<7,6,AP_RND,AP_SAT_SYM>(inp[15]);
+}
 
 } // namespace nnet
 

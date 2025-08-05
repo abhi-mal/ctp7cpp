@@ -27,7 +27,6 @@ void conv_2d_resource_cl(
 
     // Treating weights as 2d is required to make sure Vitis doesn't use urem cores to calculate indices.
     // Also, we don't apply ARRAY_RESHAPE pragma as Vitis figures this out on its own.
-//    #pragma HLS ARRAY_PARTITION variable=weights complete
     typename CONFIG_T::weight_t(*weights_2d)[CONFIG_T::reuse_factor] =
         (typename CONFIG_T::weight_t(*)[CONFIG_T::reuse_factor])weights;
 
@@ -41,7 +40,7 @@ void conv_2d_resource_cl(
 
 PartitionLoop:
     for (unsigned i_part = 0; i_part < CONFIG_T::n_partitions; i_part++) {
-//        #pragma HLS UNROLL // We don't want this loop unrolled
+        //#pragma HLS UNROLL // We don't want this loop unrolled
 
         CONFIG_T::template fill_buffer<data_T, CONFIG_T>::fill_buffer(data, data_buf, i_part);
 
@@ -99,7 +98,8 @@ PartitionLoop:
         ResultLoop:
             for (unsigned i_res = 0; i_res < mult_n_out; i_res++) {
                 #pragma HLS UNROLL
-                *(res++) = cast<data_T, res_T, typename CONFIG_T::mult_config>(acc[i_pxl][i_res]);
+                res[i_part * CONFIG_T::n_pixels * mult_n_out + i_pxl * mult_n_out + i_res] =
+                    cast<data_T, res_T, typename CONFIG_T::mult_config>(acc[i_pxl][i_res]);
             }
         }
     }
