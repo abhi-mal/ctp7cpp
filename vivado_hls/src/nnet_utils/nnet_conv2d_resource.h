@@ -12,7 +12,7 @@ void conv_2d_resource_cl(
     res_T res[CONFIG_T::out_height * CONFIG_T::out_width * CONFIG_T::n_filt],
     typename CONFIG_T::weight_t weights[CONFIG_T::filt_height * CONFIG_T::filt_width * CONFIG_T::n_chan * CONFIG_T::n_filt],
     typename CONFIG_T::bias_t biases[CONFIG_T::n_filt]) {
-    #pragma HLS latency max=3
+    #pragma HLS latency max=3    
     constexpr unsigned mult_n_in = CONFIG_T::filt_height * CONFIG_T::filt_width * CONFIG_T::n_chan;
     constexpr unsigned mult_n_out = CONFIG_T::n_filt;
     constexpr unsigned block_factor = DIV_ROUNDUP(mult_n_in * mult_n_out, CONFIG_T::reuse_factor);

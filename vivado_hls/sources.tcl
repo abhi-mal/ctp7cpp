@@ -13,7 +13,8 @@ add_files src/${project_name}.cpp -cflags "-std=c++0x"
 #add_files src/bitonic32Dec.cpp -cflags "-std=c++0x"
 
 ### Add testbed files
-add_files -tb src/algo_unpacked_tb.cpp  -cflags "-std=c++0x" 
+#add_files -tb src/algo_unpacked_tb.cpp  -cflags "-std=c++0x" 
+add_files -tb src/test_wrapper.cpp  -cflags "-std=c++0x"
 add_files -tb src/weights
 
 ### Add test input files

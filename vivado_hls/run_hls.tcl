@@ -186,7 +186,8 @@ if {$opt(synth)} {
 if {$opt(cosim)} {
     puts "***** C/RTL SIMULATION *****"
     # TODO: This is a workaround (Xilinx defines __RTL_SIMULATION__ only for SystemC testbenches).
-    add_files -tb src/algo_unpacked_tb.cpp -cflags "-std=c++0x -DRTL_SIM"
+    #add_files -tb src/algo_unpacked_tb.cpp -cflags "-std=c++0x -DRTL_SIM"
+    add_files -tb src/test_wrapper.cpp -cflags "-std=c++0x -DRTL_SIM"
     set time_start [clock clicks -milliseconds]
 
     cosim_design -argv $opt(tv) -trace_level all
