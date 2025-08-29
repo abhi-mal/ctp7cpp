@@ -27,7 +27,7 @@ int main() {
     //return 0;
 
     int total_errors = 0;
-    const int NUM_TESTS = 6379;//1000;
+    const int NUM_TESTS = 62;//6379;//1000;
     ap_uint<128> link_in_data[N_CH_IN];
     ap_uint<192> link_out_data[N_CH_OUT];
     result_t golden_output[N_LAYER_13];

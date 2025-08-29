@@ -67,17 +67,6 @@ void cicada(
 
     nnet::relu<dense1_t, dense1_relu_t, relu_config10>(layer9_out, layer10_out); // dense1_relu
 
-    // Create a new array to act as a pipeline register between the ReLU and the next Dense layer.
-    // Use 'volatile' to prevent HLS from optimizing this register away.
-    //volatile dense1_relu_t layer10_out_registered[N_LAYER_9];
-    //#pragma HLS ARRAY_PARTITION variable=layer10_out_registered complete dim=0    
-
-    // This pipelined loop copies the data in one clock cycle, effectively inserting a register stage.
-    //Register_Stage_1: for (int i = 0; i < N_LAYER_9; i++) {
-    //    #pragma HLS PIPELINE
-    //    layer10_out_registered[i] = layer10_out[i];
-    //}
-    #pragma HLS INLINE off
     nnet::dense2_iq<dense1_relu_t, dense2_iq_t>(layer10_out, layer12_out); // dense2_iq
 
     nnet::dense<dense2_iq_t, dense2_t, config13>(layer12_out, layer13_out, w13, b13); // dense2

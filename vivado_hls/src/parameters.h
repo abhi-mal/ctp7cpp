@@ -99,8 +99,8 @@ struct config9 : nnet::dense_config {
     static const unsigned io_type = nnet::io_parallel;
     static const unsigned strategy = nnet::resource;
     static const unsigned reuse_factor = 1;
-    static const unsigned n_zeros = 2878;
-    static const unsigned n_nonzeros = 1154;
+    static const unsigned n_zeros = 3699;
+    static const unsigned n_nonzeros = 333;
     static const unsigned multiplier_limit = DIV_ROUNDUP(n_in * n_out, reuse_factor) - n_zeros / reuse_factor;
     static const bool store_weights_in_bram = false;
     typedef dense1_accum_t accum_t;
@@ -116,7 +116,7 @@ struct config9 : nnet::dense_config {
 // dense1_relu
 struct relu_config10 : nnet::activ_config {
     static const unsigned n_in = 16;
-    static const unsigned table_size = 16384;
+    static const unsigned table_size = 32768;
     static const unsigned io_type = nnet::io_parallel;
     static const unsigned reuse_factor = 1;
     typedef dense1_relu_table_t table_t;
@@ -129,8 +129,8 @@ struct config13 : nnet::dense_config {
     static const unsigned io_type = nnet::io_parallel;
     static const unsigned strategy = nnet::resource;
     static const unsigned reuse_factor = 1;
-    static const unsigned n_zeros = 5;
-    static const unsigned n_nonzeros = 11;
+    static const unsigned n_zeros = 6;
+    static const unsigned n_nonzeros = 10;
     static const unsigned multiplier_limit = DIV_ROUNDUP(n_in * n_out, reuse_factor) - n_zeros / reuse_factor;
     static const bool store_weights_in_bram = false;
     typedef dense2_accum_t accum_t;
@@ -146,7 +146,7 @@ struct config13 : nnet::dense_config {
 // dense2_relu
 struct relu_config14 : nnet::activ_config {
     static const unsigned n_in = 1;
-    static const unsigned table_size = 8192;
+    static const unsigned table_size = 4096;
     static const unsigned io_type = nnet::io_parallel;
     static const unsigned reuse_factor = 1;
     typedef dense2_relu_table_t table_t;

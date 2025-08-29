@@ -1,5 +1,1 @@
-Setup based on https://gitlab.cern.ch/asvetek/l1tcalos3 from Ales Svetek.
-
-For making realistic test vectors from any EDM files, use: https://github.com/pallabidas/L1TRegionDumper to create an input root file.
-
-Run the maketv.C inside scripts as usual with root.
+Setup to test the student models, includes scripts which allow testing without needing to use L1TRegionDumper and CMSSW workflow. This helps test new models much faster. Works together with the test vector generation scripts in the hgq2 branch of cicada repo.
